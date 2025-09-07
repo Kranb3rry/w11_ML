@@ -38,8 +38,8 @@ dt_model = DecisionTreeClassifier(random_state=42)
 # 하이퍼파라미터 후보군 설정
 param_grid = {
     'criterion': ['gini', 'entropy'],
-    'max_depth': [2, 5],
-    'min_samples_split': [2, 10],
+    'max_depth': [2, 3, 4, 5],
+    'min_samples_split': [2, 5, 10],
     'min_samples_leaf': [1, 2, 4]
 }
 # GridSearchCV 설정 및 학습 실행
