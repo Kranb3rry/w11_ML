@@ -77,3 +77,46 @@ plt.show()
 
 ''' 코드 작성 바랍니다 '''
 
+from xgboost import XGBClassifier
+
+# 3. GridSearchCV 설정 및 모델 학습 (XGBoost)
+# XGBoost 분류기 모델 생성
+xgb_model = XGBClassifier(random_state=42, use_label_encoder=False, eval_metric='mlogloss')
+
+# PDF에서 제시된 하이퍼파라미터 후보군
+param_grid = {
+    'max_depth': [3, 5, 7, 9, 15],
+    'learning_rate': [0.1, 0.01, 0.001],
+    'n_estimators': [50, 100, 200, 300]
+}
+
+# GridSearchCV 설정 및 학습 실행
+grid_search = GridSearchCV(estimator=xgb_model, param_grid=param_grid, cv=5, scoring='accuracy', verbose=1)
+grid_search.fit(X_train, y_train)
+
+# 4. 결과 출력
+# 최적 하이퍼파라미터와 최고 점수(Accuracy) 출력
+print(f"Best parameters: {grid_search.best_params_}")
+print(f"Best accuracy: {grid_search.best_score_}")
+
+# 5. 변수 중요도 시각화
+# 최적 모델과 변수 중요도 추출
+best_model = grid_search.best_estimator_
+importances = best_model.feature_importances_
+feature_names = X.columns
+
+# 시각화 설정
+plt.figure(figsize=(12, 6))
+plt.bar(feature_names, importances)
+plt.title('Feature Importance')   # 플롯 제목
+plt.xlabel('Feature')             # x축 제목
+plt.ylabel('importance')          # y축 제목 (이미지에 맞춰 소문자로 변경)
+
+# 변수명을 45도 기울여서 표시
+plt.xticks(rotation=45, ha='right')
+
+# 레이아웃을 조정하여 변수명이 잘리지 않게 함
+plt.tight_layout()
+
+# 플롯 보여주기
+plt.show()
